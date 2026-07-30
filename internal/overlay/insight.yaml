@@ -302,6 +302,11 @@ commands:
     example: |
       dce insight alert get-provider --name aliyun-sms
       dce insight alert get-provider --name aliyun-sms -o json
+    params:
+      # 上游 swagger 把 proto 里的 `ProviderType type = 2 [ ... ];` 片段漏成了
+      # description，daocloud-api-docs 之前会清洗掉，直接 vendor 原始产物就露出来了
+      name:
+        help: "Provider name"
 
   create-provider:
     short: "Create an SMS provider"
@@ -336,6 +341,10 @@ commands:
     short: "Delete an SMS provider"
     example: |
       dce insight alert delete-provider --name aliyun-sms
+    params:
+      # 同 get-provider：清洗上游漏出来的 proto 片段
+      name:
+        help: "Provider name"
 
   # ── 告警 - 通知模板 (Template) ────────────────────────────────────────
   list-templates:
