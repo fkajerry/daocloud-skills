@@ -11,23 +11,28 @@ sources:
 
   kpanda:
     display_name: container-management
-    repo_url: https://github.com/DaoCloud/daocloud-api-docs.git
-    # pinned to main HEAD as of 2026-05-11; bump when upgrading kpanda version
-    pinned_tag: 4bc92dd4c0c1637b4257f69e26eb8dd6cdd269f3
+    # Vendored from kpanda branch release-v0.49 @ 22c4c70f8e073b0268d7fc2ccca9934b711aaae7
+    # ("Release candidate v0.49.0-rc1", 2026-07-29), file
+    # api/assets/swagger/v1alpha1/kpanda.swagger.json on gitlab.daocloud.cn/ndx/engineering/kpanda.
+    # Vendored rather than fetched because the internal GitLab is unreachable from CI — and
+    # release-v0.49 is a moving branch, so the SHA above is the real provenance, not the ref.
+    # daocloud-api-docs still ships v0.46.0.
+    local_path: ..
     backend: swagger
     swagger:
       files:
-        - docs/openapi/kpanda/v0.46.0.json
+        - specs/kpanda/kpanda.swagger.json
 
   insight:
     display_name: insight
-    repo_url: https://github.com/DaoCloud/daocloud-api-docs.git
-    # pinned to main HEAD as of 2026-05-11; bump when upgrading kpanda version
-    pinned_tag: 4bc92dd4c0c1637b4257f69e26eb8dd6cdd269f3
+    # Vendored from insight@v0.43.0-rc9 (gitlab.daocloud.cn/ndx/engineering/insight/insight,
+    # api/assets/swagger/v1alpha1/insight.swagger.json) because the internal GitLab is not
+    # reachable from CI and daocloud-api-docs still ships v0.41.0.
+    local_path: ..
     backend: swagger
     swagger:
       files:
-        - docs/openapi/insight/v0.41.0.json
+        - specs/insight/insight.swagger.json
 
   gmagpie:
     display_name: operations-management
@@ -190,3 +195,29 @@ sources:
     swagger:
       files:
         - specs/crane/crane.swagger.json
+
+  agentclaw:
+    display_name: agentclaw
+    # Vendored from agentclaw@v0.5.0 (gitlab.daocloud.cn/ndx/engineering/clawos/agentclaw,
+    # api/openapiv2/**). Not published in daocloud-api-docs. protoc-gen-openapiv2 emits one
+    # file per proto package; the definition-only files (page/types/permission/skill_types)
+    # are omitted since every file inlines the definitions it needs.
+    #
+    # One deliberate divergence from upstream: skill_publish.swagger.json (hand-written
+    # upstream, not protoc output) declares Authorization as a required header parameter.
+    # runtime.BearerAuth already sets that header from `dce auth login`, so keeping it would
+    # generate a required --authorization flag whose value is overwritten before the request
+    # goes out. The parameter is dropped here; worth fixing upstream.
+    local_path: ..
+    backend: swagger
+    swagger:
+      files:
+        - specs/agentclaw/agent.swagger.json
+        - specs/agentclaw/skill.swagger.json
+        - specs/agentclaw/skill_publish.swagger.json
+        - specs/agentclaw/workspace.swagger.json
+        - specs/agentclaw/user.swagger.json
+        - specs/agentclaw/model.swagger.json
+        - specs/agentclaw/networkpolicy.swagger.json
+        - specs/agentclaw/overview.swagger.json
+        - specs/agentclaw/feature_gate.swagger.json
